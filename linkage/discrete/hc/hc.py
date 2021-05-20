@@ -11,7 +11,7 @@ class HillClimber(ABC):
         self.benchmark = benchmark
 
     @abstractmethod
-    def __call__(self, solution: Solution) -> Solution:
+    def __call__(self, solution: Solution, **kwargs) -> Solution:
         pass
 
     def apply(self, solutions: List[Solution]) -> List[Solution]:

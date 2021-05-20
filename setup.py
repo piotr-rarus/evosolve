@@ -6,7 +6,7 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name="linkage-learning",
+    name="linkage",
     description="Linkage Learning methods.",
 
     author="Piotr Rarus",
@@ -25,12 +25,8 @@ setuptools.setup(
         ]
     ),
     install_requires=[
-        "evobench==0.4.1"
+        # "evobench==0.4.1"
     ],
-    # package_data={
-    #     "evobench.discrete.isg": ["data/*.txt"],
-    #     "evobench.routing": ["data/*"]
-    # },
     include_package_data=True,
     tests_require=[
         "flake8>=3.8.3",
