@@ -6,15 +6,15 @@ with open("README.md", "r") as fh:
 
 
 setuptools.setup(
-    name="linkage",
-    description="Linkage Learning methods.",
+    name="evolearn",
+    description="Linkage Learning solvers.",
 
     author="Piotr Rarus",
     author_email="piotr.rarus@gmail.com",
 
-    url="https://github.com/piotr-rarus/linkage-learning",
+    url="https://github.com/piotr-rarus/evolearn",
     license="MIT",
-    version="0.0.0",
+    version="0.0.1",
 
     long_description=long_description,
     long_description_content_type="text/markdown",
@@ -25,7 +25,7 @@ setuptools.setup(
         ]
     ),
     install_requires=[
-        # "evobench==0.4.1"
+        "evobench==0.5.0"
     ],
     include_package_data=True,
     tests_require=[
