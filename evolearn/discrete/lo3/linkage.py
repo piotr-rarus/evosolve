@@ -1,10 +1,16 @@
-from linkage.discrete.hc.fihc import FIHC
-from evobench import Solution
 from typing import List, Tuple
+
 import numpy as np
+from evobench import Solution
+
+from evolearn.discrete.hc.fihc import FIHC
 
 
-def get_scraps_for_solution(solution: Solution, fihc: FIHC) -> Tuple[np.ndarray, np.ndarray]:
+def get_scraps_for_solution(
+    solution: Solution,
+    fihc: FIHC
+) -> Tuple[np.ndarray, np.ndarray]:
+
     scraps: List[np.ndarray] = []
     interactions: List[np.ndarray] = []
 
