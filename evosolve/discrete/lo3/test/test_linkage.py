@@ -2,8 +2,8 @@ import numpy as np
 from evobench import Benchmark, Population
 from pytest import fixture
 
-from evolearn.discrete.hc.fihc import FIHC
-from evolearn.discrete.lo3.linkage import get_scraps_for_solution
+from evosolve.discrete.hc.fihc import FIHC
+from evosolve.discrete.lo3.linkage import get_scraps_for_solution
 
 
 @fixture(scope="module")

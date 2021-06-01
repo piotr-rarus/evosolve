@@ -3,7 +3,7 @@ from typing import List, Tuple
 import numpy as np
 from evobench import Solution
 
-from evolearn.discrete.hc.fihc import FIHC
+from evosolve.discrete.hc.fihc import FIHC
 
 
 def get_scraps_for_solution(
