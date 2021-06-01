@@ -1,18 +1,17 @@
 import setuptools
 
-
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
 
 setuptools.setup(
-    name="evolearn",
-    description="Linkage Learning solvers.",
+    name="evosolve",
+    description="Metaheuristics solvers.",
 
     author="Piotr Rarus",
     author_email="piotr.rarus@gmail.com",
 
-    url="https://github.com/piotr-rarus/evolearn",
+    url="https://github.com/piotr-rarus/evosolve",
     license="MIT",
     version="0.0.1",
 
@@ -21,11 +20,12 @@ setuptools.setup(
 
     packages=setuptools.find_packages(
         exclude=[
-            "test"
+            "test",
+            "examples"
         ]
     ),
     install_requires=[
-        "evobench==0.5.0"
+        "evobench==0.5.2"
     ],
     include_package_data=True,
     tests_require=[
@@ -34,7 +34,9 @@ setuptools.setup(
         "pytest-cov>=2.10.0",
     ],
     classifiers=[
-        "Programming Language :: Python :: 3",
+        "Programming Language :: Python :: 3.7",
+        "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "License :: OSI Approved :: MIT License",
         "Operating System :: OS Independent"
     ],

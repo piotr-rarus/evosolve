@@ -1,2 +1,2 @@
-#flake8: noqa
+# flake8: noqa
 from .fihc import FIHC
