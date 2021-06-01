@@ -1,7 +1,7 @@
 import numpy as np
 from evobench import Benchmark, Population
 
-from evolearn.continuous.dg2.linkage import get_scraps_for_solution
+from evosolve.continuous.dg2.linkage import get_scraps_for_solution
 
 
 def test_scraps(benchmark: Benchmark, population: Population):

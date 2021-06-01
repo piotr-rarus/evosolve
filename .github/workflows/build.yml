@@ -26,11 +26,11 @@ jobs:
 
     - name: Linter
       run: |
-        python -m flake8 --max-line-length=88 evobench
+        python -m flake8 --max-line-length=88 evosolve
 
     - name: Tests
       run: |
-        coverage run -m pytest evobench
+        coverage run -m pytest evosolve
         coverage report
         coverage html
 

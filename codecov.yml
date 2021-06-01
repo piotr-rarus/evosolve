@@ -10,7 +10,7 @@ coverage:
   range: "70...100"
 
 include:
-  - ./evobench/**
+  - ./evosolve/**
 
 parsers:
   gcov:
