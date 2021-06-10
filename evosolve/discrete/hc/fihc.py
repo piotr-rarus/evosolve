@@ -11,6 +11,9 @@ class FIHC(HillClimber):
         super().__init__(benchmark)
 
     def __call__(self, solution: Solution, loci_order: np.ndarray = None) -> Solution:
+        if loci_order is None:
+            loci_order = self.get_loci_order()
+
         assert loci_order.size == self.benchmark.genome_size
         assert solution.genome.size == self.benchmark.genome_size
 
@@ -18,9 +21,6 @@ class FIHC(HillClimber):
             solution.fitness = self.benchmark.evaluate_solution(solution)
 
         loci = solution.genome.copy()
-
-        if loci_order is None:
-            loci_order = self.get_loci_order()
 
         improved_score = solution.fitness
         loci_improved = True

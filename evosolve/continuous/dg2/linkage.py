@@ -24,7 +24,7 @@ class EmpiricalLinkage(BaseEmpiricalLinkage):
 
         context = (self.benchmark.lower_bound + self.benchmark.upper_bound) / 2
         gene_idx = set(range(self.benchmark.genome_size))
-        gene_idx.remove(self.gene_index)
+        gene_idx.remove(target_index)
         pairs = itertools.product([target_index], gene_idx)
 
         interactions = np.zeros(self.benchmark.genome_size, dtype=bool)
@@ -56,7 +56,7 @@ class EmpiricalLinkage(BaseEmpiricalLinkage):
             eps *= f_sum
             diff = abs(d1 - d2)
 
-            interactions[target_index] = diff > eps
+            interactions[p2] = diff > eps
 
         return LinkageScrap(target_index, interactions)
 
