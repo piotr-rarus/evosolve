@@ -1,23 +1,38 @@
-import numpy as np
-from evobench import Benchmark, Population
-from pytest import fixture
+from evobench import Population, Solution
 
-from evosolve.discrete.hc.fihc import FIHC
-from evosolve.discrete.lo3.linkage import get_scraps_for_solution
+from evosolve.conftest import LinkageHelpers
 
-
-@fixture(scope="module")
-def fihc(benchmark: Benchmark) -> FIHC:
-    return FIHC(benchmark)
+from ..linkage import EmpiricalLinkage
 
 
-def test_scraps(fihc: FIHC, population: Population):
-    solution = population.solutions[0]
-    scraps, interactions = get_scraps_for_solution(solution, fihc)
+def test_get_scrap(
+    empirical_linkage: EmpiricalLinkage,
+    solution: Solution,
+    linkage_helpers: LinkageHelpers
+):
+    scrap = empirical_linkage.get_scrap(solution, target_index=0)
+    genome_size = empirical_linkage.benchmark.genome_size
 
-    genome_size = fihc.benchmark.genome_size
+    linkage_helpers.check_empirical_scraps([scrap], genome_size)
 
-    assert isinstance(scraps, np.ndarray)
-    assert isinstance(interactions, np.ndarray)
-    assert scraps.shape == (genome_size, genome_size - 1)
-    assert interactions.shape == (genome_size, genome_size - 1)
+
+def test_get_scraps(
+    empirical_linkage: EmpiricalLinkage,
+    population: Population,
+    linkage_helpers: LinkageHelpers
+):
+    scraps = empirical_linkage.get_scraps(population.solutions, target_index=0)
+    genome_size = empirical_linkage.benchmark.genome_size
+
+    linkage_helpers.check_empirical_scraps(scraps, genome_size)
+
+
+def test_get_all_scraps(
+    empirical_linkage: EmpiricalLinkage,
+    solution: Solution,
+    linkage_helpers: LinkageHelpers
+):
+    scraps = empirical_linkage.get_all_scraps(solution)
+    genome_size = empirical_linkage.benchmark.genome_size
+
+    linkage_helpers.check_empirical_scraps(scraps, genome_size)

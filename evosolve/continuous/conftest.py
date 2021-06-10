@@ -5,7 +5,7 @@ from pytest import fixture
 
 @fixture(scope="module")
 def benchmark() -> Benchmark:
-    return Multimodal(blocks=[4] * 3)
+    return Multimodal(blocks=[4] * 3, overlap_size=1)
 
 
 @fixture(scope="module")
