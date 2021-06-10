@@ -1,5 +1,3 @@
-from copy import deepcopy
-
 import numpy as np
 from evobench import Benchmark
 from evobench.model import Solution
@@ -13,16 +11,18 @@ class FIHC(HillClimber):
         super().__init__(benchmark)
 
     def __call__(self, solution: Solution, loci_order: np.ndarray = None) -> Solution:
-        solution = deepcopy(solution)
-        loci = solution.genome
-
         if loci_order is None:
             loci_order = self.get_loci_order()
 
         assert loci_order.size == self.benchmark.genome_size
         assert solution.genome.size == self.benchmark.genome_size
 
-        improved_score = self.benchmark.evaluate_solution(solution)
+        if not solution.fitness:
+            solution.fitness = self.benchmark.evaluate_solution(solution)
+
+        loci = solution.genome.copy()
+
+        improved_score = solution.fitness
         loci_improved = True
 
         while loci_improved:
@@ -31,7 +31,8 @@ class FIHC(HillClimber):
 
             for index in loci_order:
                 loci[index] = not loci[index]
-                loci_score = self.benchmark.evaluate_solution(solution)
+                loci_solution = Solution(loci)
+                loci_score = self.benchmark.evaluate_solution(loci_solution)
 
                 if loci_score > improved_score:
                     improved_score = loci_score

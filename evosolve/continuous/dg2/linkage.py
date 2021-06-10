@@ -1,108 +1,64 @@
 import itertools
 import math
-import sys
-from typing import List, Tuple
+from sys import float_info
 
 import numpy as np
 from evobench import Benchmark, Solution
 
-
-def get_scraps_for_solution(
-    solution: Solution,
-    benchmark: Benchmark
-) -> Tuple[np.ndarray, np.ndarray]:
-
-    assert hasattr(benchmark, "lower_bound")
-    assert hasattr(benchmark, "upper_bound")
-
-    scraps: List[np.ndarray] = []
-    interactions: List[np.ndarray] = []
-
-    for gene_index in range(solution.genome.size):
-        gene_scrap, gene_interactions = get_scrap(
-            gene_index, solution, benchmark
-        )
-        scraps.append(gene_scrap)
-        interactions.append(gene_interactions)
-
-    scraps = np.vstack(scraps)
-    interactions = np.vstack(interactions)
-    return scraps, interactions
+from evosolve.linkage import BaseEmpiricalLinkage, LinkageScrap
 
 
-# def get_scraps_for_gene(
-#     gene_index: int,
-#     solutions: List[Solution],
-# ) -> Tuple[np.ndarray, np.ndarray]:
+class EmpiricalLinkage(BaseEmpiricalLinkage):
 
-#     scraps: List[np.ndarray] = []
-#     interactions: List[np.ndarray] = []
+    def __init__(self, benchmark: Benchmark):
+        assert hasattr(benchmark, "lower_bound")
+        assert hasattr(benchmark, "upper_bound")
 
-#     for solution in solutions:
-#         gene_scrap, gene_interactions = get_scrap(solution, gene_index, fihc)
-#         scraps.append(gene_scrap)
-#         interactions.append(gene_interactions)
+        super(EmpiricalLinkage, self).__init__(benchmark)
 
-#     scraps = np.vstack(scraps)
-#     interactions = np.vstack(interactions)
-#     return scraps, interactions
+    def get_scrap(self, base: Solution, target_index: int) -> LinkageScrap:
+        if not base.fitness:
+            base.fitness = self.benchmark.evaluate_solution(base)
 
+        float_eps = float_info.epsilon
 
-def get_scrap(
-    gene_index: int,
-    solution: Solution,
-    benchmark: Benchmark,
-) -> Tuple[np.ndarray, np.ndarray]:
+        context = (self.benchmark.lower_bound + self.benchmark.upper_bound) / 2
+        gene_idx = set(range(self.benchmark.genome_size))
+        gene_idx.remove(target_index)
+        pairs = itertools.product([target_index], gene_idx)
 
-    float_eps = sys.float_info.epsilon
-    context = (benchmark.lower_bound + benchmark.upper_bound) / 2
-    gene_idx = set(range(benchmark.genome_size))
-    gene_idx.remove(gene_index)
-    pairs = itertools.product([gene_index], gene_idx)
+        interactions = np.zeros(self.benchmark.genome_size, dtype=bool)
 
-    mask = np.ones(benchmark.genome_size, dtype=bool)
-    mask[gene_index] = False
+        for p1, p2 in pairs:
+            s1 = base.genome.copy()
+            s1[p1] = context[p1]
+            s1 = Solution(s1)
 
-    interactions = np.zeros(benchmark.genome_size, dtype=bool)
+            s2 = base.genome.copy()
+            s2[p2] = context[p2]
+            s2 = Solution(s2)
 
-    for base, target in pairs:
-        a1 = solution.genome.copy()
-        a1[base] = context[base]
-        a1 = Solution(a1)
+            s3 = base.genome.copy()
+            s3[[p1, p2]] = context[[p1, p2]]
+            s3 = Solution(s3)
 
-        a2 = solution.genome.copy()
-        a2[target] = context[target]
-        a2 = Solution(a2)
+            s1.fitness = self.benchmark.evaluate_solution(s1)
+            s2.fitness = self.benchmark.evaluate_solution(s2)
+            s3.fitness = self.benchmark.evaluate_solution(s3)
 
-        a3 = solution.genome.copy()
-        a3[[base, target]] = context[[base, target]]
-        a3 = Solution(a3)
+            d1 = s1.fitness - base.fitness
+            d2 = s3.fitness - s2.fitness
 
-        # ! TODO: single interface for evaluate?
-        a1.fitness = benchmark.evaluate_solution(a1)
-        a2.fitness = benchmark.evaluate_solution(a2)
-        a3.fitness = benchmark.evaluate_solution(a3)
+            f_sum = np.array([base.fitness, s1.fitness, s2.fitness, s3.fitness])
+            f_sum = np.abs(f_sum).sum()
 
-        d1 = a1.fitness - solution.fitness
-        d2 = a3.fitness - a2.fitness
+            eps = self._gamma(float_eps / 2, math.sqrt(self.benchmark.genome_size) + 2)
+            eps *= f_sum
+            diff = abs(d1 - d2)
 
-        f_sum = np.array([solution.fitness, a1.fitness, a2.fitness, a3.fitness])
-        f_sum = np.abs(f_sum).sum()
+            interactions[p2] = diff > eps
 
-        eps = _gamma(float_eps / 2, math.sqrt(benchmark.genome_size) + 2) * f_sum
-        diff = abs(d1 - d2)
+        return LinkageScrap(target_index, interactions)
 
-        interactions[target] = diff > eps
-
-    interactions = interactions[mask]
-    scrap = np.argsort(interactions)
-    scrap = np.flip(scrap)
-    interactions = interactions[scrap]
-    scrap[scrap >= gene_index] += 1
-    interactions = interactions.astype(float)
-
-    return scrap, interactions
-
-
-def _gamma(shape: float, scale: float) -> float:
-    return (shape * scale) / (1.0 - shape * scale)
+    def _gamma(self, shape: float, scale: float) -> float:
+        return (shape * scale) / (1.0 - shape * scale)
