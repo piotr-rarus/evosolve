@@ -5,6 +5,13 @@ from evosolve.conftest import LinkageHelpers
 from ..linkage import EmpiricalLinkage
 
 
+def test_name(empirical_linkage: EmpiricalLinkage):
+    name = empirical_linkage.name
+
+    assert isinstance(name, str)
+    assert name is not None
+
+
 def test_get_scrap(
     empirical_linkage: EmpiricalLinkage,
     solution: Solution,

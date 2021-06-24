@@ -25,7 +25,7 @@ setuptools.setup(
         ]
     ),
     install_requires=[
-        "evobench==0.5.2"
+        "evobench>=0.5.2"
     ],
     include_package_data=True,
     tests_require=[

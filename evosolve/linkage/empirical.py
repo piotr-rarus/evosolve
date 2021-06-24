@@ -2,6 +2,7 @@ from abc import ABC, abstractmethod
 from typing import List
 
 from evobench import Benchmark, Solution
+from lazy import lazy
 
 from evosolve.linkage.scrap import LinkageScrap
 
@@ -11,6 +12,10 @@ class BaseEmpiricalLinkage(ABC):
     def __init__(self, benchmark: Benchmark):
         super(BaseEmpiricalLinkage, self).__init__()
         self.benchmark = benchmark
+
+    @lazy
+    def name(self) -> str:
+        return self.__module__.split(".")[-2]
 
     @abstractmethod
     def get_scrap(self, base: Solution, target_index: int) -> LinkageScrap:
