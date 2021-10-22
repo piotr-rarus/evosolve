@@ -33,7 +33,7 @@ def linkage_helpers() -> LinkageHelpers:
 
 @fixture(scope="session")
 def benchmark() -> Benchmark:
-    return Trap(blocks=[4] * 3)
+    return Trap(blocks=[3] * 2)
 
 
 @fixture(scope="session")
