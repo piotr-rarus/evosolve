@@ -44,5 +44,5 @@ class FIHC(HillClimber):
 
     def get_loci_order(self) -> np.ndarray:
         loci_order = np.arange(start=0, stop=self.benchmark.genome_size)
-        self.benchmark.random_state.shuffle(loci_order)
+        self.benchmark.rng.shuffle(loci_order)
         return loci_order

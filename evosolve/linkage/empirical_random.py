@@ -14,7 +14,7 @@ class RandomEmpiricalLinkage(BaseEmpiricalLinkage):
 
         assert base.genome.size == self.benchmark.genome_size
 
-        interactions = self.benchmark.random_state.uniform(
+        interactions = self.benchmark.rng.uniform(
             size=self.benchmark.genome_size
         )
 

@@ -22,4 +22,5 @@ class OptimalMixing(Operator):
         offspring = Solution(offspring)
         offspring.fitness = self.benchmark.evaluate_solution(offspring)
 
+        # ! TODO: benchmark min/max
         return offspring if offspring.fitness >= source.fitness else source

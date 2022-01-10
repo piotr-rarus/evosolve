@@ -23,7 +23,7 @@ class Tournament(Operator):
         pool_idx = np.arange(len(pool))
 
         while(len(new_solutions) < self.POP_SIZE):
-            contestants = self.benchmark.random_state.choice(
+            contestants = self.benchmark.rng.choice(
                 pool_idx,
                 size=self.TOURNAMENT_SIZE,
                 replace=False
