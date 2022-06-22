@@ -14,7 +14,7 @@ lazy==1.4
     # via evobench
 networkx==2.6.3
     # via evobench
-numpy==1.21.2
+numpy==1.22.0
     # via
     #   evobench
     #   pandas
